@@ -8,17 +8,25 @@ class TaskListWidget extends StatefulWidget {
 
 class _TaskListWidgetState extends State<TaskListWidget> {
 
-  final todos = new List<String>.generate(5, (int index) => "Tests");
+  final _todos = new List<String>();
+  bool _isAdding = false;
 
   Iterable<ListTile> _generateListTiles() {
-    return todos.map((todo) => new ListTile(
+    return _todos.map((todo) => new ListTile(
       title: new Text(todo),
     ));
   }
 
-  void _addTodo() {
+  void _showAddTodoInput() {
     setState(() {
-      todos.add("A new todo");
+      _isAdding = true;
+    });
+  }
+
+  void _addTodo(String todoName) {
+    setState(() {
+      _todos.add(todoName);
+      _isAdding = false;
     });
   }
 
@@ -26,14 +34,17 @@ class _TaskListWidgetState extends State<TaskListWidget> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("Scrit"),
+        title: _isAdding ? new TextField(
+          autofocus: true,
+          onSubmitted: _addTodo,
+        ) : new Text("Scrit"),
       ),
       body: new ListView(
         padding: new EdgeInsets.symmetric(vertical: 8.0),
         children: _generateListTiles().toList(),
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: _addTodo,
+        onPressed: _showAddTodoInput,
         tooltip: 'Increment',
         child: new Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
