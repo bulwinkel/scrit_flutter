@@ -8,8 +8,13 @@ class TaskListWidget extends StatefulWidget {
 
 class _TaskListWidgetState extends State<TaskListWidget> {
 
-  final _todos = new List<String>();
+  final List<String> _todos = new List<String>();
   bool _isAdding = false;
+  String _nextTodoItem = "";
+
+  void _updateNextTodoItem(String changedText) {
+    _nextTodoItem = changedText;
+  }
 
   Iterable<ListTile> _generateListTiles() {
     return _todos.map((todo) => new ListTile(
@@ -17,15 +22,26 @@ class _TaskListWidgetState extends State<TaskListWidget> {
     ));
   }
 
+  void _addTodoIfValid() {
+    if (_nextTodoItem.isNotEmpty) {
+      _todos.insert(0, _nextTodoItem);
+      _nextTodoItem = "";
+    }
+  }
+
   void _showAddTodoInput() {
     setState(() {
-      _isAdding = true;
+      if (_isAdding) {
+        _addTodoIfValid();
+      } else {
+        _isAdding = true;
+      }
     });
   }
 
   void _addTodo(String todoName) {
     setState(() {
-      _todos.add(todoName);
+      _addTodoIfValid();
       _isAdding = false;
     });
   }
@@ -37,6 +53,8 @@ class _TaskListWidgetState extends State<TaskListWidget> {
         title: _isAdding ? new TextField(
           autofocus: true,
           onSubmitted: _addTodo,
+          onChanged: _updateNextTodoItem,
+          controller: new TextEditingController(text: _nextTodoItem),
         ) : new Text("Scrit"),
       ),
       body: new ListView(
