@@ -17,20 +17,21 @@ class _TaskListWidgetState extends State<TaskListWidget> {
     _nextTodoItem = changedText;
   }
 
-  void _onCheckboxChanged(final TodoItem todo, final bool isComplete) {
-    final index = _todos.indexOf(todo);
-    final updatedTodo = todo.copy(isComplete: isComplete);
+  /// replace the todo in the list with the given
+  /// one by id
+  void _updateTodo(final TodoItem todo) {
     setState(() {
-      _todos[index] = updatedTodo;
+      final index = _todos.indexWhere((item) => item.id == todo.id);
+      _todos[index] = todo;
     });
   }
 
+  void _onCheckboxChanged(final TodoItem todo, final bool isComplete) {
+    _updateTodo(todo.copy(isComplete: isComplete));
+  }
+
   void _changeToEditMode(final TodoItem todo) {
-    final index = _todos.indexOf(todo);
-    final updatedTodo = todo.copy(isInEditMode: !todo.isInEditMode);
-    setState(() {
-      _todos[index] = updatedTodo;
-    });
+    _updateTodo(todo.copy(isInEditMode: !todo.isInEditMode));
   }
 
   void _delete(final TodoItem todo) {

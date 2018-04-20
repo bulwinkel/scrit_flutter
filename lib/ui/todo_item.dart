@@ -1,9 +1,17 @@
+import 'package:uuid/uuid.dart';
+
+final Uuid _uuid = new Uuid();
+
 class TodoItem {
+  final String id;
   final String title;
   final bool isComplete;
   final bool isInEditMode;
 
-  TodoItem({this.title, this.isComplete = false, this.isInEditMode = false});
+  TodoItem({this.title, this.isComplete = false, this.isInEditMode = false})
+      : this.id = _uuid.v4();
+
+  TodoItem._of({this.id, this.title, this.isComplete = false, this.isInEditMode = false});
 
   //region: data class
 
@@ -28,7 +36,8 @@ class TodoItem {
   }
 
   TodoItem copy({final String title, final bool isComplete, final bool isInEditMode}) {
-    return TodoItem(
+    return new TodoItem._of(
+      id: this.id,
       title: title != null ? title : this.title,
       isComplete: isComplete != null ? isComplete : this.isComplete,
       isInEditMode: isInEditMode != null ? isInEditMode : this.isInEditMode,
