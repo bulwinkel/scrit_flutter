@@ -25,19 +25,52 @@ class _TaskListWidgetState extends State<TaskListWidget> {
     });
   }
 
+  void _changeToEditMode(final TodoItem todo) {
+    final index = _todos.indexOf(todo);
+    final updatedTodo = todo.copy(isInEditMode: !todo.isInEditMode);
+    setState(() {
+      _todos[index] = updatedTodo;
+    });
+  }
+
+  void _delete(final TodoItem todo) {
+    setState(() {
+      _todos.remove(todo);
+    });
+  }
+
   Iterable<ListTile> _generateListTiles() {
-    return _todos.map((todo) => new ListTile(
-      title: new Text(
+    return _todos.map((todo) {
+
+      final text = new Text(
         todo.title,
-        style: new TextStyle(fontStyle: todo.isComplete ? FontStyle.italic : FontStyle.normal),
-      ),
-      trailing: new Checkbox(
-        value: todo.isComplete,
-        onChanged: (bool newValue) {
-          _onCheckboxChanged(todo, newValue);
-        },
-      )
-    ));
+        style: new TextStyle(
+            fontStyle: todo.isComplete ? FontStyle.italic : FontStyle.normal),
+      );
+
+      return new ListTile(
+        title: !todo.isComplete ? text : new Stack(
+          children: <Widget>[
+            text,
+            new Positioned.fill(
+              left: 0.0,
+              right: 0.0,
+              child: new Divider(color: Colors.black),
+            )
+          ],
+        ),
+        trailing: todo.isInEditMode ? new IconButton(
+            icon: new Icon(Icons.delete),
+            onPressed: () { _delete(todo); }
+        ) : new Checkbox(
+          value: todo.isComplete,
+          onChanged: (bool newValue) {
+            _onCheckboxChanged(todo, newValue);
+          },
+        ),
+        onLongPress: () { _changeToEditMode(todo); },
+      );
+    });
   }
 
   void _addTodoIfValid() {

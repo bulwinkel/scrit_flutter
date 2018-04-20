@@ -1,8 +1,9 @@
 class TodoItem {
   final String title;
   final bool isComplete;
+  final bool isInEditMode;
 
-  TodoItem({this.title, this.isComplete = false});
+  TodoItem({this.title, this.isComplete = false, this.isInEditMode = false});
 
   //region: data class
 
@@ -12,22 +13,25 @@ class TodoItem {
           other is TodoItem &&
               runtimeType == other.runtimeType &&
               title == other.title &&
-              isComplete == other.isComplete;
+              isComplete == other.isComplete &&
+              isInEditMode == other.isInEditMode;
 
   @override
   int get hashCode =>
       title.hashCode ^
-      isComplete.hashCode;
+      isComplete.hashCode ^
+      isInEditMode.hashCode;
 
   @override
   String toString() {
-    return 'TodoItem{title: $title, isComplete: $isComplete}';
+    return 'TodoItem{title: $title, isComplete: $isComplete, isInEditMode: $isInEditMode}';
   }
 
-  TodoItem copy({final String title, final bool isComplete}) {
+  TodoItem copy({final String title, final bool isComplete, final bool isInEditMode}) {
     return TodoItem(
       title: title != null ? title : this.title,
-      isComplete: isComplete != null ? isComplete : this.isComplete
+      isComplete: isComplete != null ? isComplete : this.isComplete,
+      isInEditMode: isInEditMode != null ? isInEditMode : this.isInEditMode,
     );
   }
 
