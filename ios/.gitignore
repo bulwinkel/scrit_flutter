@@ -40,3 +40,7 @@ Icon?
 /ServiceDefinitions.json
 
 Pods/
+
+**GoogleService-Info.plist
+
+xcshareddata
